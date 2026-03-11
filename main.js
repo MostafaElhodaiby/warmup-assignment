@@ -66,13 +66,13 @@ function getIdleTime(startTime, endTime) {
 
     let idle = 0;
 
-    if (start < deliveryStart) {
-        idle += deliveryStart - start;
-    }
+   if (start < deliveryStart) {
+    idle += Math.max(0, Math.min(end, deliveryStart) - start);
+}
 
-    if (end > deliveryEnd) {
-        idle += end - deliveryEnd;
-    }
+if (end > deliveryEnd) {
+    idle += Math.max(0, end - Math.max(start, deliveryEnd));
+}
 
     if (start >= deliveryStart && end <= deliveryEnd) {
         idle = 0;
@@ -163,7 +163,7 @@ function addShiftRecord(textFile, shiftObj) {
     let data = fs.readFileSync(textFile, "utf8").trim();
     let lines = data ? data.split("\n") : [];
 
-    // check duplicate
+    
     for (let line of lines) {
         let parts = line.split(",");
         if (parts[0] === shiftObj.driverID && parts[2] === shiftObj.date) {
@@ -202,7 +202,11 @@ function addShiftRecord(textFile, shiftObj) {
         newRecord.hasBonus
     ].join(",");
 
+   if (data.length > 0) {
     fs.appendFileSync(textFile, "\n" + newLine);
+} else {
+    fs.writeFileSync(textFile, newLine);
+}
 
     return newRecord;
 
