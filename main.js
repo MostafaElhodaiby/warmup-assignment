@@ -379,7 +379,7 @@ function getRequiredHoursPerMonth(textFile, rateFile, bonusCount, driverID, mont
         }
     }
 
-    totalSeconds -= bonusCount * 2 * 3600;
+    totalSeconds = Math.max(0, totalSeconds - bonusCount * 2 * 3600);
 
     let h = Math.floor(totalSeconds / 3600);
     let m = Math.floor((totalSeconds % 3600) / 60);
